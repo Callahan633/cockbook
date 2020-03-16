@@ -55,9 +55,11 @@ class Scraper(object):
                             ingredients.save()
                         except IntegrityError:
                             pass
-                    # TODO: dodelai, psina
-                    # found_amount = re.match(r'(\d+(,\d+)?)', parsed_dict['amount'])
-                    # if found_amount:
-                    #     found_amount.group(0)
-                    # else:
-                    #     ingredients =
+                    amount = re.search(r'(\d+(,\d+)?)', parsed_dict['amount'])
+                    ingredients_meals = Ingredients_Meals(meals_id=meal.id,
+                                                          ingredients_id=ingredients.id,
+                                                          amount=amount.group(0))
+                    try:
+                        ingredients_meals.save()
+                    except IntegrityError:
+                        pass
