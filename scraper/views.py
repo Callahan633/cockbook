@@ -56,10 +56,12 @@ class Scraper(object):
                         except IntegrityError:
                             pass
                     amount = re.search(r'(\d+(,\d+)?)', parsed_dict['amount'])
-                    ingredients_meals = Ingredients_Meals(meals_id=meal.id,
-                                                          ingredients_id=ingredients.id,
-                                                          amount=amount.group(0))
-                    try:
-                        ingredients_meals.save()
-                    except IntegrityError:
-                        pass
+                    if amount is not None:
+                        converted_to_decimal = re.sub(r',', '.', amount.group(0))
+                        ingredients_meals = Ingredients_Meals(meals_id=meal.id,
+                                                              ingredients_id=ingredients.id,
+                                                              amount=converted_to_decimal)
+                        try:
+                            ingredients_meals.save()
+                        except IntegrityError:
+                            pass

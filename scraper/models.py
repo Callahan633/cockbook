@@ -15,7 +15,7 @@ class Meals(models.Model):
 
 class Ingredients_Meals(models.Model):
     id = models.BigAutoField(primary_key=True)
-    meals_id = models.ForeignKey(to=Meals, on_delete=models.CASCADE)
-    ingredients_id = models.ForeignKey(to=Ingredients, on_delete=models.CASCADE)
+    meals = models.ForeignKey(to=Meals, on_delete=models.CASCADE)
+    ingredients = models.ForeignKey(to=Ingredients, on_delete=models.CASCADE)
     amount = models.DecimalField(decimal_places=1, max_digits=5, blank=True)
     additional_info = models.CharField(max_length=255, blank=True)
