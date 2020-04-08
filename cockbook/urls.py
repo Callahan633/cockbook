@@ -15,7 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.views.decorators.csrf import csrf_exempt
+
+from scraper import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('ingredients_search/', csrf_exempt(views.ingredients_search), name='ingredients_search'),
 ]

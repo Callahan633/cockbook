@@ -6,4 +6,4 @@ from scraper.utils import Scraper
 class Command(BaseCommand):
     def handle(self, *args, **options):
         s = Scraper()
-        s.perform_scraping()
+        s.make_links()
