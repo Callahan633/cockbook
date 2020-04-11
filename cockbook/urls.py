@@ -23,4 +23,5 @@ from scraper import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('ingredients_search/', csrf_exempt(views.ingredients_search), name='ingredients_search'),
+    path('meals_search/', csrf_exempt(views.meals_search), name='meals_search'),
 ]
