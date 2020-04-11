@@ -92,49 +92,13 @@ class Scraper(object):
                         except ValidationError:
                             pass
 
-    # def make_links(self):
-    #     global ingredient, meal
-    #     for counter in range(1, 310):
-    #         data_for_parsing = self._get_content(counter)
-    #         meals_for_parsing = data_for_parsing.find_all('div', class_='horizontal-tile__content')
-    #         for div in meals_for_parsing:
-    #             meal_string = self._collect_meals(div)
-    #             div_content = div.find_all('p', 'ingredients-list__content-item content-item js-cart-ingredients')
-    #             for p_tag in div_content:
-    #                 ingredients = self._collect_ingredients(p_tag)
-    #                 regexp = re.compile(r"(?<=\s)\D+")
-    #                 measurement_units = re.search(regexp, ingredients['amount'])
-    #                 amount = re.search(r'(\d+(,\d+)?)', ingredients['amount'])
-    #                 try:
-    #                     meal = Meals.objects.get(name=meal_string)
-    #                 except ObjectDoesNotExist:
-    #                     pass
-    #                 try:
-    #                     ingredient = Ingredients.objects.get(name=ingredients['name'])
-    #                 except ObjectDoesNotExist:
-    #                     pass
-    #                 if measurement_units and amount is not None:
-    #                     converted_to_decimal = re.sub(r',', '.', amount.group(0))
-    #                     ingredients_meals = Ingredients_Meals(meals_id=meal.id,
-    #                                                           ingredients_id=ingredient.id,
-    #                                                           measure=measurement_units.group(0),
-    #                                                           amount=converted_to_decimal,)
-    #                     try:
-    #                         ingredients_meals.save()
-    #                     except IntegrityError:
-    #                         pass
-    #                 elif amount is None and measurement_units is not None:
-    #                     ingredients_meals = Ingredients_Meals(meals_id=meal.id,
-    #                                                           ingredients_id=ingredient.id,
-    #                                                           measure=measurement_units.group(0),)
-    #                     try:
-    #                         ingredients_meals.save()
-    #                     except IntegrityError:
-    #                         pass
-    #                 else:
-    #                     ingredients_meals = Ingredients_Meals(meals_id=meal.id,
-    #                                                           ingredients_id=ingredient.id,)
-    #                     try:
-    #                         ingredients_meals.save()
-    #                     except IntegrityError:
-    #                         pass
+
+def _make_json(item):
+    inner_dict = {'name': item.name, 'ingredients': []}
+    ingredients_link = Ingredients_Meals.objects.all().filter(meals=item.id)
+    for ingredient_link in ingredients_link:
+        ingredient_object = Ingredients.objects.get(id=ingredient_link.ingredients.id)
+        ingredient_name = ingredient_object.name
+        measure = ingredient_link.measure
+        inner_dict['ingredients'].append({'name': ingredient_name, 'measure': measure})
+    return inner_dict
