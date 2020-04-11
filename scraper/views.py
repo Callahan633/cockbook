@@ -10,7 +10,7 @@ from scraper.models import Ingredients, Meals, Ingredients_Meals
 def ingredients_search(request):
     if request.method == 'POST':
         ingredients_for_search = json.loads(request.body)
-        ingredients_objects_ids = Ingredients.objects.filter(reduce(operator.and_, (Q(name__icontains=x for x in ingredients_for_search['ingredients'])))).values_list('id', flat=True)
+        ingredients_objects_ids = Ingredients.objects.filter(reduce(operator.and_, (Q(name__icontains=x) for x in ingredients_for_search['ingredients']))).values_list('id', flat=True)
         meals_link = Ingredients_Meals.objects.all().filter(ingredients__in=list(ingredients_objects_ids)).values_list('meals', flat=True)
         meals = Meals.objects.all().filter(id__in=list(meals_link)).values_list('id', flat=True)[:100]
         meals_for_json = {'recipes': []}
